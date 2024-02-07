@@ -1,3 +1,9 @@
+## The famous Kvantum is on windows!
+
+Remember you can **not** mix different environment together (by which I mean MSVC or mingw). The apps have to be compiled with the same compiler that compiles kvantum.
+
+---
+
 # Kvantum
 
 ## Overview

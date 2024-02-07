@@ -24,11 +24,9 @@ greaterThan(QT_MAJOR_VERSION, 4) {
   }
 }
 
-TARGET = kvantum-hack
+TARGET = kvantum-hack-qt$$QT_MAJOR_VERSION
 TEMPLATE = lib
 CONFIG += c++11
-
-VERSION = 0.1
 
 STYLE = ../style
 INCLUDEPATH = $$STYLE
