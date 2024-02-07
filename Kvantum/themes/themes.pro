@@ -1,10 +1,19 @@
 TEMPLATE = aux
 
 unix {
-  #VARIABLES
   isEmpty(PREFIX) {
     PREFIX = /usr
   }
+}
+
+win32 {
+  isEmpty(PREFIX) {
+    PREFIX = "C:/Kvantum"
+  }
+}
+
+unix|win32 {
+  #VARIABLES
   KVDIR = $$PREFIX/share/Kvantum
   KF5COLORSDIR = $$PREFIX/share/color-schemes
 

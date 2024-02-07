@@ -82,7 +82,7 @@ void ThemeConfig::load(const QString& theme)
   if (!QFile::exists(theme))
     return;
 
-  settings_ = new QSettings(theme,QSettings::NativeFormat);
+  settings_ = new QSettings(theme,QSettings::IniFormat);
 }
 
 QVariant ThemeConfig::getValue(const QString& group, const QString& key) const

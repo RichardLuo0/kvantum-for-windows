@@ -880,7 +880,7 @@ void KvantumManager::deleteTheme()
     QString configFile = QString ("%1/Kvantum/kvantum.kvconfig").arg (xdg_config_home);
     if (QFile::exists (configFile))
     {
-        QSettings settings (configFile, QSettings::NativeFormat);
+        QSettings settings(configFile, QSettings::IniFormat);
         if (settings.contains ("theme") && theme == settings.value ("theme").toString())
         { // the active theme is removed...
             if (customThemeDeleted)
@@ -952,7 +952,7 @@ void KvantumManager::useTheme()
         kvconfigTheme_ = QString();
 
     QString configFile = QString ("%1/Kvantum/kvantum.kvconfig").arg (xdg_config_home);
-    QSettings settings (configFile, QSettings::NativeFormat);
+    QSettings settings(configFile, QSettings::IniFormat);
     if (!settings.isWritable()) return;
 
     if (kvconfigTheme_.isEmpty())
@@ -1001,7 +1001,7 @@ void KvantumManager::defaultThemeButtons()
     /* Someone may have compiled Kvantum with another default theme.
        So, we get its settings directly from its kvconfig file. */
     QString defaultConfig = ":/Kvantum/default.kvconfig";
-    QSettings defaultSettings (defaultConfig, QSettings::NativeFormat);
+    QSettings defaultSettings(defaultConfig, QSettings::IniFormat);
 
     defaultSettings.beginGroup ("Focus");
     ui->checkBoxFocusRect->setChecked (!defaultSettings.value ("frame").toBool());
@@ -1437,7 +1437,7 @@ void KvantumManager::tabChanged (int index)
             {
                 /* NOTE: The existence of keys should be checked because of inheritance. */
 
-                QSettings themeSettings (themeConfig, QSettings::NativeFormat);
+                QSettings themeSettings(themeConfig, QSettings::IniFormat);
                 /* consult the default config file if a key doesn't exist */
                 themeSettings.beginGroup ("General");
                 bool composited = true;
@@ -1788,7 +1788,7 @@ QString KvantumManager::getComment (const QString &comboText, bool setState)
 
     if (text.isEmpty() || (!themeConfig.isEmpty() && QFile::exists (themeConfig)))
     {
-        QSettings themeSettings (themeConfig, QSettings::NativeFormat);
+        QSettings themeSettings(themeConfig, QSettings::IniFormat);
         themeSettings.beginGroup ("General");
         QString commentStr ("comment");
         if (!lang_.isEmpty())
@@ -2067,7 +2067,7 @@ void KvantumManager::updateThemeList (bool updateAppThemes)
     }
     if (!configFile.isEmpty())
     {
-        QSettings settings (configFile, QSettings::NativeFormat);
+        QSettings settings(configFile, QSettings::IniFormat);
         if (settings.contains ("theme"))
         {
             kvconfigTheme_ = settings.value ("theme").toString();
@@ -2308,7 +2308,7 @@ void KvantumManager::writeConfig()
     }
 
     QString configFile = QString ("%1/Kvantum/kvantum.kvconfig").arg (xdg_config_home);
-    QSettings settings (configFile, QSettings::NativeFormat);
+    QSettings settings(configFile, QSettings::IniFormat);
     if (!settings.isWritable())
     {
         notWritable (configFile);
@@ -2321,7 +2321,7 @@ void KvantumManager::writeConfig()
     if (QFile::exists (themeConfig)) // user theme (originally or after copying)
     {
         userConfigFile_ = themeConfig;
-        QSettings themeSettings (themeConfig, QSettings::NativeFormat);
+        QSettings themeSettings(themeConfig, QSettings::IniFormat);
         if (!themeSettings.isWritable())
         {
             notWritable (themeConfig);
@@ -2730,7 +2730,7 @@ void KvantumManager::writeAppLists()
 void KvantumManager::writeOrigAppLists()
 {
     QString configFile = QString ("%1/Kvantum/kvantum.kvconfig").arg (xdg_config_home);
-    QSettings settings (configFile, QSettings::NativeFormat);
+    QSettings settings(configFile, QSettings::IniFormat);
     if (!settings.isWritable())
     {
         notWritable (configFile);

@@ -28,6 +28,7 @@
 #include <QRegion>
 
 #ifdef NO_KF
+#include <X11/Xdefs.h>
 #endif
 
 namespace Kvantum {
@@ -57,7 +58,13 @@ class BlurHelper: public QObject
        update of blur regions of pending widgets. */
     virtual void timerEvent (QTimerEvent* event)
     {
-      
+      if (event->timerId() == timer_.timerId())
+      {
+        timer_.stop();
+        update();
+      }
+      else
+        QObject::timerEvent (event);
     }
 
     /* The blur-behind region for a given widget. */
@@ -67,9 +74,17 @@ class BlurHelper: public QObject
        used to allow some buffering of the update requests. */
     void delayedUpdate()
     {
+      if (!timer_.isActive())
+        timer_.start (10, this);
     }
     void update()
     {
+      for (const WidgetPointer& widget : static_cast<const WidgetSet&>(pendingWidgets_))
+      {
+        if (widget)
+          update (widget.data());
+      }
+      pendingWidgets_.clear();
     }
 
     /* Update blur regions for given widget. */
@@ -103,7 +118,9 @@ class BlurHelper: public QObject
     bool onlyActiveWindow_;
 
 #ifdef NO_KF
-    bool isX11_ = false;
+    /* The required atom. */
+    Atom atom_blur_;
+    bool isX11_;
 #endif
 };
 }

@@ -40,6 +40,18 @@ FORMS += \
     about.ui
 
 unix {
+  isEmpty(PREFIX) {
+    PREFIX = /usr
+  }
+}
+
+win32 {
+  isEmpty(PREFIX) {
+    PREFIX = "C:/Kvantum"
+  }
+}
+
+unix|win32 {
   #TRANSLATIONS
   exists($$[QT_INSTALL_BINS]/lrelease) {
     TRANSLATIONS = $$system("find data/translations/ -name 'kvantummanager_*.ts'")
@@ -51,9 +63,6 @@ unix {
   }
 
   #VARIABLES
-  isEmpty(PREFIX) {
-    PREFIX = /usr
-  }
   BINDIR = $$PREFIX/bin
   DATADIR =$$PREFIX/share
 

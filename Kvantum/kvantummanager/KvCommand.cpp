@@ -217,7 +217,7 @@ bool setTheme (const QString& theme)
         else return false;
     }
     QString configFile = QString ("%1/Kvantum/kvantum.kvconfig").arg (getHomeConfig());
-    QSettings settings (configFile, QSettings::NativeFormat);
+    QSettings settings(configFile, QSettings::IniFormat);
     if (!settings.isWritable()) return false;
 
     if (settings.value ("theme").toString() != theTheme)
@@ -229,7 +229,7 @@ bool setTheme (const QString& theme)
 bool assignTheme (const QString& theme, const QStringList& apps)
 {
     QString configFile = QString ("%1/Kvantum/kvantum.kvconfig").arg (getHomeConfig());
-    QSettings settings (configFile, QSettings::NativeFormat);
+    QSettings settings(configFile, QSettings::IniFormat);
     if (!settings.isWritable()) return false;
 
     if (theme.isEmpty()) // remove all assignments

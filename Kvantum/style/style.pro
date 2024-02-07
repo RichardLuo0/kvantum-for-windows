@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     lessThan(QT_MINOR_VERSION, 15) {
       error("Kvantum needs at least Qt 5.15.0.")
     }
-    QT += x11extras
+    !win32: QT += x11extras
   } else {
     equals(QT_MAJOR_VERSION, 6) {
       lessThan(QT_MINOR_VERSION, 2) {
@@ -88,10 +88,23 @@ RESOURCES += themeconfig/defaulttheme.qrc
 unix:!macx: LIBS += -lX11
 
 unix {
-  #VARIABLES
   isEmpty(PREFIX) {
     PREFIX = /usr
   }
+}
+
+win32 {
+  isEmpty(PREFIX) {
+    PREFIX = "C:/Kvantum"
+  }
+}
+
+isEmpty(STYLES) {
+  STYLES = $$[QT_INSTALL_PLUGINS]/styles
+}
+
+unix|win32 {
+  #VARIABLES
   COLORSDIR =$$PREFIX/share/kde4/apps/color-schemes
   KF5COLORSDIR =$$PREFIX/share/color-schemes
   DATADIR =$$PREFIX/share
@@ -99,7 +112,7 @@ unix {
   DEFINES += DATADIR=\\\"$$DATADIR\\\"
 
   #MAKE INSTALL
-  target.path = $$[QT_INSTALL_PLUGINS]/styles
+  target.path = $$STYLES
   colors.path = $$COLORSDIR
   colors.files += ../color/Kvantum.colors
   kf5colors.path = $$KF5COLORSDIR

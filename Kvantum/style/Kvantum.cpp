@@ -188,7 +188,7 @@ Style::Style(bool useDark) : QCommonStyle()
   }
   if (!themeChooserFile.isEmpty())
   {
-    QSettings themeChooser(themeChooserFile,QSettings::NativeFormat);
+    QSettings themeChooser(themeChooserFile,QSettings::IniFormat);
     if (themeChooser.status() == QSettings::NoError)
     {
       if (themeChooser.contains(QStringLiteral("theme")))
@@ -249,7 +249,7 @@ Style::Style(bool useDark) : QCommonStyle()
         kdeGlobals = QString("%1/.kde4/share/config/kdeglobals").arg(homeDir);
       if (QFile::exists(kdeGlobals))
       {
-        QSettings KDESettings(kdeGlobals, QSettings::NativeFormat);
+        QSettings KDESettings(kdeGlobals, QSettings::IniFormat);
         QVariant v;
         int iconSize;
         KDESettings.beginGroup(QStringLiteral("DialogIcons"));

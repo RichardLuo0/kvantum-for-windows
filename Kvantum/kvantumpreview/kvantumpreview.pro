@@ -27,7 +27,20 @@ FORMS += KvantumPreviewBase.ui
 SOURCES += main.cpp
 RESOURCES += KvantumPreviewResources.qrc
 QT += widgets
+
 unix {
+  isEmpty(PREFIX) {
+    PREFIX = /usr
+  }
+}
+
+win32 {
+  isEmpty(PREFIX) {
+    PREFIX = "C:/Kvantum"
+  }
+}
+
+unix|win32 {
   #TRANSLATIONS
   exists($$[QT_INSTALL_BINS]/lrelease) {
     TRANSLATIONS = $$system("find data/translations/ -name 'kvantumpreview_*.ts'")
@@ -39,9 +52,6 @@ unix {
   }
 
   #VARIABLES
-  isEmpty(PREFIX) {
-    PREFIX = /usr
-  }
   BINDIR = $$PREFIX/bin
   DATADIR =$$PREFIX/share
 
@@ -53,3 +63,5 @@ unix {
   target.path =$$BINDIR
   INSTALLS += target trans
 }
+
+message($$DATADIR)

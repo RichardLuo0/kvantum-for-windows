@@ -205,7 +205,7 @@ Style::Style() : QCommonStyle()
   QString themeChooserFile = QString("%1/Kvantum/kvantum.kvconfig").arg(xdg_config_home);
   if (QFile::exists(themeChooserFile))
   {
-    QSettings themeChooser (themeChooserFile,QSettings::NativeFormat);
+    QSettings themeChooser (themeChooserFile,QSettings::IniFormat);
     if (themeChooser.status() == QSettings::NoError)
     {
       if (themeChooser.contains("theme"))
@@ -265,7 +265,7 @@ Style::Style() : QCommonStyle()
         kdeGlobals = QString("%1/.kde4/share/config/kdeglobals").arg(homeDir);
       if (QFile::exists(kdeGlobals))
       {
-        QSettings KDESettings(kdeGlobals, QSettings::NativeFormat);
+        QSettings KDESettings(kdeGlobals, QSettings::IniFormat);
         QVariant v;
         int iconSize;
         KDESettings.beginGroup("DialogIcons");
