@@ -15,5 +15,5 @@ Configuration can be found under `~\.config\Kvantum`
 ## If you have [qt6ct](https://github.com/RichardLuo0/qt6ct-for-windows) or [qt5ct](https://github.com/RichardLuo0/qt5ct-for-windows) installed
 * Download the latest release and extract in a folder.
 * Move the content of `style-qt5` to `<qt5ct path>/style`, do the same for `style-qt6`
-* Set env variable `QT_STYLE_OVERRIDE=kvantum`.
+* Set env variable `QT_STYLE_OVERRIDE=qt5ct`.
 * Open qt*ct and set kvantum as current style.
