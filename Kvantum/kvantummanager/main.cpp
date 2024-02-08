@@ -15,14 +15,15 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "KvantumManager.h"
-#include "KvCommand.h"
 #include <QApplication>
-#include <QStyleFactory>
-#include <QMessageBox>
-#include <QTranslator>
 #include <QLibraryInfo>
+#include <QMessageBox>
+#include <QStyleFactory>
 #include <QTextStream>
+#include <QTranslator>
+#include <Qdebug>
+#include "KvCommand.h"
+#include "KvantumManager.h"
 
 int main (int argc, char *argv[])
 {
@@ -125,9 +126,9 @@ int main (int argc, char *argv[])
 
     QTranslator KMTranslator;
 #if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-    KMTranslator.load ("kvantummanager_" + lang, QStringLiteral (DATADIR) + "/kvantummanager/translations");
+    KMTranslator.load("kvantummanager_" + lang, DATADIR + "/kvantummanager/translations");
 #else
-    (void)KMTranslator.load ("kvantummanager_" + lang, QStringLiteral (DATADIR) + "/kvantummanager/translations");
+    (void) KMTranslator.load("kvantummanager_" + lang, DATADIR + "/kvantummanager/translations");
 #endif
     a.installTranslator (&KMTranslator);
 

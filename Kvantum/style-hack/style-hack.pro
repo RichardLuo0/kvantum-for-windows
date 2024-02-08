@@ -90,7 +90,7 @@ unix|win32 {
   KF5COLORSDIR =$$PREFIX/share/color-schemes
   DATADIR =$$PREFIX/share
 
-  DEFINES += DATADIR=\\\"$$DATADIR\\\"
+  DEFINES += DATADIR="qgetenv(\\\"KVANTUM_DATA\\\")"
 
   #MAKE INSTALL
   target.path = $$PREFIX/styles-hack

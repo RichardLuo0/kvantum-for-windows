@@ -66,7 +66,7 @@ unix|win32 {
   BINDIR = $$PREFIX/bin
   DATADIR =$$PREFIX/share
 
-  DEFINES += DATADIR=\\\"$$DATADIR\\\"
+  DEFINES += DATADIR="qgetenv(\\\"KVANTUM_DATA\\\")"
 
   #MAKE INSTALL
   iconsvg.path = $$DATADIR/icons/hicolor/scalable/apps

@@ -54,9 +54,9 @@ int main (int argc, char *argv[])
 
   QTranslator KPTranslator;
 #if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-  KPTranslator.load ("kvantumpreview_" + lang, QStringLiteral (DATADIR) + "/kvantumpreview/translations");
+  KPTranslator.load("kvantumpreview_" + lang, DATADIR + "/kvantumpreview/translations");
 #else
-  (void)KPTranslator.load ("kvantumpreview_" + lang, QStringLiteral (DATADIR) + "/kvantumpreview/translations");
+  (void) KPTranslator.load("kvantumpreview_" + lang, DATADIR + "/kvantumpreview/translations");
 #endif
   viewer.installTranslator (&KPTranslator);
 
