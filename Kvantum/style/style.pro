@@ -24,7 +24,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
   }
 }
 
-TARGET = kvantum
+TARGET = kvantum-qt$$QT_MAJOR_VERSION
 TEMPLATE = lib
 CONFIG += c++11
 
@@ -98,7 +98,7 @@ win32 {
 }
 
 isEmpty(STYLES) {
-  STYLES = $$[QT_INSTALL_PLUGINS]/styles
+  STYLES = $$PREFIX/styles
 }
 
 unix|win32 {

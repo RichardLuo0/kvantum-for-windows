@@ -63,7 +63,7 @@ unix|win32 {
   }
 
   #VARIABLES
-  BINDIR = $$PREFIX/bin
+  BINDIR = $$PREFIX
   DATADIR =$$PREFIX/share
 
   DEFINES += DATADIR="qgetenv(\\\"KVANTUM_DATA\\\")"

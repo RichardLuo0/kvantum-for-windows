@@ -541,6 +541,8 @@ class Style : public QCommonStyle {
     // For item views:
     mutable QStyleOptionViewItem *cachedOption_;
     mutable QRect decorationRect_, displayRect_, checkRect_;
+
+    bool isDark = false;
 };
 }
 

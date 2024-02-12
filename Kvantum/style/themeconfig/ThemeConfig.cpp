@@ -608,6 +608,8 @@ theme_spec ThemeConfig::getCompositeSpec()
              when the platform name isn't set to "wayland". */
     compositing = true;
   }
+#elif defined Q_OS_WIN
+  compositing = true;
 #endif
 
   /* no blurring or window translucency without compositing */

@@ -20,92 +20,42 @@
 #ifndef BLURHELPER_H
 #define BLURHELPER_H
 
-#include <QWidget>
-#include <QPointer>
-#include <QHash>
 #include <QBasicTimer>
-#include <QTimerEvent>
+#include <QHash>
+#include <QPointer>
 #include <QRegion>
+#include <QTimerEvent>
+#include <QWidget>
 
 #ifdef NO_KF
 #endif
 
 namespace Kvantum {
 /* A class for blurring the region behind a translucent window in KDE. */
-class BlurHelper: public QObject
-{
+class BlurHelper : public QObject {
   Q_OBJECT
 
-  public:
+ public:
+  BlurHelper(QObject *, QList<qreal> menuS, QList<qreal> tooltipS,
+             int menuBlurRadius = 0, int toolTipBlurRadius = 0,
+             qreal contrast = static_cast<qreal>(1),
+             qreal intensity = static_cast<qreal>(1),
+             qreal saturation = static_cast<qreal>(1),
+             bool onlyActiveWindow = false, bool darkMode = false);
 
-    BlurHelper (QObject*, QList<qreal> menuS, QList<qreal> tooltipS,
-                int menuBlurRadius = 0, int toolTipBlurRadius = 0,
-                qreal contrast = static_cast<qreal>(1),
-                qreal intensity = static_cast<qreal>(1),
-                qreal saturation = static_cast<qreal>(1),
-                bool onlyActiveWindow = false);
+  virtual ~BlurHelper() {}
 
-    virtual ~BlurHelper() {}
+  void registerWidget(QWidget *);
+  void unregisterWidget(QWidget *);
 
-    void registerWidget (QWidget*);
-    void unregisterWidget (QWidget*);
-    virtual bool eventFilter (QObject*, QEvent*);
+ private:
+  int darkMode = false;
+  int menuCorner;
+  int tooltipsCorner;
 
-  protected:
-
-    /* Timer event, used to perform delayed
-       update of blur regions of pending widgets. */
-    virtual void timerEvent (QTimerEvent* event)
-    {
-      
-    }
-
-    /* The blur-behind region for a given widget. */
-    QRegion blurRegion (QWidget*) const;
-
-    /* Update blur region for all pending widgets. A timer is
-       used to allow some buffering of the update requests. */
-    void delayedUpdate()
-    {
-    }
-    void update()
-    {
-    }
-
-    /* Update blur regions for given widget. */
-    void update (QWidget*) const;
-
-    /* Clear blur regions for given widget. */
-    void clear (QWidget*) const;
-
-  private:
-
-    bool isWidgetActive (const QWidget *widget) const;
-
-    /* List of widgets for which blur region must be updated. */
-    typedef QPointer<QWidget> WidgetPointer;
-    typedef QHash<QWidget*, WidgetPointer> WidgetSet;
-    WidgetSet pendingWidgets_;
-
-    /* Delayed update timer. */
-    QBasicTimer timer_;
-
-    /* Dimensions of pure shadows of menus and tooltips.
-       (left, top, right, bottom) */
-    QList<qreal> menuShadow_;
-    QList<qreal> tooltipShadow_;
-
-    int menuBlurRadius_;
-    int toolTipBlurRadius_;
-
-    qreal contrast_, intensity_, saturation_;
-
-    bool onlyActiveWindow_;
-
-#ifdef NO_KF
-    bool isX11_ = false;
-#endif
+  bool eventFilter(QObject *watched, QEvent *event);
+  void applyBackdrop(QWidget *widget);
 };
-}
+}  // namespace Kvantum
 
 #endif

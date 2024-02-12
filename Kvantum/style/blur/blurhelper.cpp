@@ -16,158 +16,102 @@
  */
 
 #include "blurhelper.h"
+#undef DATADIR
+#include <Windows.h>
+#include <dwmapi.h>
+#pragma comment(lib, "Dwmapi.lib")
 
+#include <QDebug>
 #include <QEvent>
-#include <QMenu>
 #include <QFrame>
+#include <QMenu>
 #include <QWindow>
+#include <QtMath>
 
 #ifdef NO_KF
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 #include <QVector>
 #endif
 #include <QApplication>
 #else
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 #include <KWindowEffects>
 #endif
 #endif
 
+DWM_WINDOW_CORNER_PREFERENCE getWindowsCorner(int radius) {
+  switch (radius) {
+    case 0:
+      return DWMWCP_DEFAULT;
+    case 1:
+      return DWMWCP_ROUNDSMALL;
+    default:
+      return DWMWCP_ROUND;
+  }
+}
+
 namespace Kvantum {
-BlurHelper::BlurHelper (QObject* parent, QList<qreal> menuS, QList<qreal> tooltipS,
-                        int menuBlurRadius, int toolTipBlurRadius,
-                        qreal contrast, qreal intensity, qreal saturation,
-                        bool onlyActiveWindow) : QObject (parent)
-{
+BlurHelper::BlurHelper(QObject *parent, QList<qreal> menuS,
+                       QList<qreal> tooltipS, int menuBlurRadius,
+                       int toolTipBlurRadius, qreal contrast, qreal intensity,
+                       qreal saturation, bool onlyActiveWindow, bool darkMode)
+    : QObject(parent), darkMode(darkMode) {
+  menuCorner = getWindowsCorner(menuBlurRadius);
+  tooltipsCorner = getWindowsCorner(toolTipBlurRadius);
 }
-/*************************/
-void BlurHelper::registerWidget (QWidget* widget)
-{
+
+MARGINS margins = {-1};
+auto mica = DWM_SYSTEMBACKDROP_TYPE::DWMSBT_TRANSIENTWINDOW;
+
+int defaultDarkMode = 0;
+auto defaultBackdropType = DWM_SYSTEMBACKDROP_TYPE::DWMSBT_AUTO;
+auto defaultWindowCorner = DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_DEFAULT;
+
+void BlurHelper::registerWidget(QWidget *widget) {
+  widget->installEventFilter(this);
 }
-/*************************/
-void BlurHelper::unregisterWidget (QWidget* widget)
-{
+
+void BlurHelper::unregisterWidget(QWidget *widget) {
+  widget->removeEventFilter(this);
+
+  HWND hwnd = (HWND)widget->winId();
+
+  DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE::DWMWA_USE_IMMERSIVE_DARK_MODE,
+                        &defaultDarkMode, sizeof(defaultDarkMode));
+  DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE::DWMWA_SYSTEMBACKDROP_TYPE,
+                        &defaultBackdropType, sizeof(defaultBackdropType));
+  DwmSetWindowAttribute(hwnd,
+                        DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE,
+                        &defaultWindowCorner, sizeof(defaultWindowCorner));
 }
-/*************************/
-bool BlurHelper::isWidgetActive (const QWidget *widget) const
-{
-  return (widget->window()->windowFlags().testFlag(Qt::WindowDoesNotAcceptFocus)
-          || widget->window()->windowFlags().testFlag(Qt::X11BypassWindowManagerHint)
-          || widget->isActiveWindow()
-          // make exception for tooltips
-          || widget->inherits("QTipLabel")
-          || ((widget->windowFlags() & Qt::WindowType_Mask) == Qt::ToolTip
-              && !qobject_cast<const QFrame*>(widget)));
-}
-/*************************/
-bool BlurHelper::eventFilter (QObject* object, QEvent* event)
-{
-  // never eat events
+
+bool BlurHelper::eventFilter(QObject *watched, QEvent *event) {
+  if (watched->isWidgetType() && (event->type() == QEvent::Show ||
+                                  event->type() == QEvent::WindowActivate)) {
+    QWidget *widget = qobject_cast<QWidget *>(watched);
+    applyBackdrop(widget);
+  }
   return false;
 }
-/*************************/
-static inline int ceilingInt(const qreal r)
-{
-  int res = qRound(r);
-  if (r - static_cast<qreal>(res) > static_cast<qreal>(0.1))
-    res += 1;
-  return res;
-}
 
-QRegion BlurHelper::blurRegion (QWidget* widget) const
-{
-  if (!widget->isVisible())
-    return QRegion();
+void BlurHelper::applyBackdrop(QWidget *widget) {
+  HWND hwnd = (HWND)widget->winId();
 
-  if (onlyActiveWindow_ && !isWidgetActive(widget))
-    return QRegion();
+  DwmExtendFrameIntoClientArea(hwnd, &margins);
+  DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE::DWMWA_USE_IMMERSIVE_DARK_MODE,
+                        &darkMode, sizeof(darkMode));
+  DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE::DWMWA_SYSTEMBACKDROP_TYPE,
+                        &mica, sizeof(mica));
 
-  QRect rect = widget->rect();
-  QRegion wMask = widget->mask();
-
-  qreal dpr = 1;
-#ifdef NO_KF
-  if (isX11_) {
-    QWindow* win = widget->window()->windowHandle();
-    dpr = win ? win->devicePixelRatio() : qApp->devicePixelRatio();
+  DWM_WINDOW_CORNER_PREFERENCE corner =
+      DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_DEFAULT;
+  if (qobject_cast<QMenu *>(widget))
+    corner = (DWM_WINDOW_CORNER_PREFERENCE)menuCorner;
+  else if (widget->inherits("QTipLabel")) {
+    corner = (DWM_WINDOW_CORNER_PREFERENCE)tooltipsCorner;
   }
-#endif
-
-  /* blurring may not be suitable when the available
-     painting area is restricted by a widget mask */
-  if (!wMask.isEmpty()) {
-    if (wMask != QRegion(rect))
-      return QRegion();
-#ifdef NO_KF
-    QRect mr = wMask.boundingRect();
-    if (dpr > static_cast<qreal>(1))
-      mr.setSize(QSizeF(mr.size() * dpr).toSize());
-    return mr;
-#else
-    return wMask;
-#endif
-  }
-
-  QList<qreal> r;
-  int radius = 0;
-  if ((qobject_cast<QMenu*>(widget)
-       && !widget->testAttribute(Qt::WA_X11NetWmWindowTypeMenu)) // not a detached menu
-      || widget->inherits("QComboBoxPrivateContainer")) {
-    if (!widget->testAttribute(Qt::WA_StyleSheetTarget))
-      r = menuShadow_;
-    radius = menuBlurRadius_;
-  } else if (widget->inherits("QTipLabel")
-             /* unusual tooltips (like in KDE system settings) */
-             || ((widget->windowFlags() & Qt::WindowType_Mask) == Qt::ToolTip
-                 && !qobject_cast<QFrame*>(widget))) {
-    if (!widget->testAttribute(Qt::WA_StyleSheetTarget))
-      r = tooltipShadow_;
-    radius = toolTipBlurRadius_;
-  }
-
-#ifdef NO_KF
-  if (dpr > static_cast<qreal>(1)) {
-    rect.setSize(QSizeF(rect.size() * dpr).toSize());
-    radius *= qRound(dpr * 2);
-  }
-#endif
-
-  if (!r.isEmpty()) {
-    rect.adjust(ceilingInt(dpr * r.at(0)),
-                ceilingInt(dpr * r.at(1)),
-                -ceilingInt(dpr * r.at(2)),
-                -ceilingInt(dpr * r.at(3)));
-  }
-
-  if (radius > 0) {
-    radius = qMin(radius, qMin(rect.width(), rect.height()) / 2);
-    QSize rSize(radius, radius);
-    QRegion topLeft(QRect(rect.topLeft(), 2 * rSize), QRegion::Ellipse);
-    QRegion topRight(QRect(rect.topLeft() + QPoint(rect.width() - 2 * radius, 0), 2 * rSize),
-                     QRegion::Ellipse);
-    QRegion bottomLeft(QRect(rect.topLeft() + QPoint(0, rect.height() - 2 * radius), 2 * rSize),
-                       QRegion::Ellipse);
-    QRegion bottomRight(QRect(rect.topLeft()
-                                  + QPoint(rect.width() - 2 * radius, rect.height() - 2 * radius),
-                              2 * rSize),
-                        QRegion::Ellipse);
-    return topLeft.united(topRight)
-        .united(bottomLeft)
-        .united(bottomRight)
-        .united(QRect(rect.topLeft() + QPoint(radius, 0),
-                      QSize(rect.width() - 2 * radius, rect.height())))
-        .united(QRect(rect.topLeft() + QPoint(0, radius),
-                      QSize(rect.width(), rect.height() - 2 * radius)));
-  } else
-    return rect;
+  DwmSetWindowAttribute(hwnd,
+                        DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE,
+                        &corner, sizeof(corner));
 }
-/*************************/
-void BlurHelper::update (QWidget* widget) const
-{
-}
-/*************************/
-void BlurHelper::clear (QWidget* widget) const
-{
-}
-
-}
+}  // namespace Kvantum

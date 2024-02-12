@@ -51,7 +51,6 @@ greaterThan(QT_MAJOR_VERSION, 4) {
              $$STYLE/rendering.cpp \
              $$STYLE/standardIcons.cpp \
              $$STYLE/viewItems.cpp \
-             KvantumPlugin.cpp \
              $$STYLE/shortcuthandler.cpp \
              $$STYLE/drag/windowmanager.cpp \
              $$STYLE/blur/blurhelper.cpp \

@@ -20,15 +20,19 @@
 
 #include <QStylePlugin>
 
+#include "Kvantum.h"
+
 namespace Kvantum {
-class KvantumPlugin : public QStylePlugin
-{
+class KvantumPlugin : public QStylePlugin {
   Q_OBJECT
-  Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE "kvantum.json")
-  public:
-  QStyle *create(const QString &key);
-  QStringList keys() const;
+  Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE
+                        "kvantum.json")
+ public:
+  QStyle *create(const QString &key) override {
+    Q_UNUSED(key);
+    return new Style(false);
+  };
 };
-} // namespace Kvantum
+}  // namespace Kvantum
 
 #endif
