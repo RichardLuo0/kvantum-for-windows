@@ -986,6 +986,8 @@ void Style::polish(QWidget *widget)
        || (/*tspec_.isX11 && */widget->inherits("QComboBoxPrivateContainer")))
       && !translucentWidgets_.contains(widget))
   {
+    widget->setWindowFlag(Qt::FramelessWindowHint);
+    widget->setAttribute(Qt::WA_TranslucentBackground);
     theme_spec tspec_now = settings_->getCompositeSpec();
     if (tspec_now.composite)
     {
@@ -1028,8 +1030,11 @@ void Style::polish(QWidget *widget)
           blurHelper_->registerWidget(widget);
       }
     }
-    else if (qobject_cast<QMenu*>(widget)) // for menubars and submenus (eventFilter -> case QEvent::Show)
-      widget->installEventFilter(this);
+    else {
+      widget->setWindowFlag(Qt::NoDropShadowWindowHint);
+      if (qobject_cast<QMenu*>(widget)) // for menubars and submenus (eventFilter -> case QEvent::Show)
+        widget->installEventFilter(this);
+    }
   }
 }
 

@@ -105,7 +105,8 @@ void BlurHelper::applyBackdrop(QWidget *widget) {
 
   DWM_WINDOW_CORNER_PREFERENCE corner =
       DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_DEFAULT;
-  if (qobject_cast<QMenu *>(widget))
+  if (qobject_cast<QMenu *>(widget) ||
+      widget->inherits("QComboBoxPrivateContainer"))
     corner = (DWM_WINDOW_CORNER_PREFERENCE)menuCorner;
   else if (widget->inherits("QTipLabel")) {
     corner = (DWM_WINDOW_CORNER_PREFERENCE)tooltipsCorner;
