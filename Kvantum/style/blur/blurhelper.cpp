@@ -50,18 +50,26 @@ DWM_WINDOW_CORNER_PREFERENCE getWindowsCorner(int radius) {
   }
 }
 
+QHash<QString, int> backdropTypeMap = {
+    {"default", -1},
+    {"none", DWM_SYSTEMBACKDROP_TYPE::DWMSBT_NONE},
+    {"mica", DWM_SYSTEMBACKDROP_TYPE::DWMSBT_MAINWINDOW},
+    {"mica_alt", DWM_SYSTEMBACKDROP_TYPE::DWMSBT_TABBEDWINDOW},
+    {"acrylic", DWM_SYSTEMBACKDROP_TYPE::DWMSBT_TRANSIENTWINDOW}};
+
 namespace Kvantum {
 BlurHelper::BlurHelper(QObject *parent, QList<qreal> menuS,
                        QList<qreal> tooltipS, int menuBlurRadius,
                        int toolTipBlurRadius, qreal contrast, qreal intensity,
-                       qreal saturation, bool onlyActiveWindow, bool darkMode)
+                       qreal saturation, bool onlyActiveWindow, bool darkMode,
+                       QString blurType)
     : QObject(parent), darkMode(darkMode) {
   menuCorner = getWindowsCorner(menuBlurRadius);
   tooltipsCorner = getWindowsCorner(toolTipBlurRadius);
+  this->blurType = backdropTypeMap[blurType];
 }
 
 MARGINS margins = {-1};
-auto mica = DWM_SYSTEMBACKDROP_TYPE::DWMSBT_TRANSIENTWINDOW;
 
 int defaultDarkMode = 0;
 auto defaultBackdropType = DWM_SYSTEMBACKDROP_TYPE::DWMSBT_AUTO;
@@ -101,7 +109,7 @@ void BlurHelper::applyBackdrop(QWidget *widget) {
   DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE::DWMWA_USE_IMMERSIVE_DARK_MODE,
                         &darkMode, sizeof(darkMode));
   DwmSetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE::DWMWA_SYSTEMBACKDROP_TYPE,
-                        &mica, sizeof(mica));
+                        &blurType, sizeof(blurType));
 
   DWM_WINDOW_CORNER_PREFERENCE corner =
       DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_DEFAULT;

@@ -51,6 +51,10 @@ KvantumManager::KvantumManager (const QString& lang, QWidget *parent) : QMainWin
     modifiedSuffix_ = " (" + tr ("modified") + ")";
     kvDefault_ = "Kvantum (" + tr ("default") + ")";
 
+    ui->blurTypeComboBox->addItem("Mica", "mica");
+    ui->blurTypeComboBox->addItem("Mica Alt", "mica_alt");
+    ui->blurTypeComboBox->addItem("Acrylic", "acrylic");
+
     centerDefaultDocTabs_ = centerDefaultNormalTabs_ = false; // not really needed
 
     ui->openTheme->setIcon (symbolicIcon::icon (":/Icons/data/document-open.svg"));
@@ -1173,6 +1177,12 @@ void KvantumManager::defaultThemeButtons()
     }
     else ui->spinSaturation->setValue (static_cast<qreal>(1));
 
+    QString type = "acrylic";
+    if (defaultSettings.contains("blur_type"))
+      type = defaultSettings.value("blur_type").toString();
+    index = ui->blurTypeComboBox->findData(type);
+    ui->blurTypeComboBox->setCurrentIndex(qMax(index, 0));
+
     tmp = 0;
     if (defaultSettings.contains ("reduce_window_opacity")) // it's 0 by default
         tmp = qMin (qMax (defaultSettings.value ("reduce_window_opacity").toInt(), -90), 90);
@@ -1580,6 +1590,11 @@ void KvantumManager::tabChanged (int index)
                     ui->spinSaturation->setValue (qBound (static_cast<qreal>(0),
                                                         themeSettings.value ("saturation").toReal(),
                                                         static_cast<qreal>(2)));
+                }
+
+                if (themeSettings.contains("blur_type")) {
+                  index = ui->blurTypeComboBox->findData(themeSettings.value("blur_type").toString());
+                  ui->blurTypeComboBox->setCurrentIndex(qMax(index, 0));
                 }
 
                 if (themeSettings.contains ("reduce_window_opacity"))
@@ -2401,6 +2416,8 @@ void KvantumManager::writeConfig()
         generalKeys.insert ("contrast", str.setNum (ui->spinContrast->value(), 'f', 2));
         generalKeys.insert ("intensity", str.setNum (ui->spinIntensity->value(), 'f', 2));
         generalKeys.insert ("saturation", str.setNum (ui->spinSaturation->value(), 'f', 2));
+
+        generalKeys.insert("blur_type", ui->blurTypeComboBox->currentData().toString());
 
         generalKeys.insert ("small_icon_size", str.setNum (ui->spinSmall->value()));
         generalKeys.insert ("large_icon_size", str.setNum (ui->spinLarge->value()));

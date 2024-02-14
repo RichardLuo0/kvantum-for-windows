@@ -225,6 +225,8 @@ typedef struct {
   int large_icon_size;
   int button_icon_size;
   int toolbar_icon_size;
+
+  QString blur_type;
 } theme_spec;
 
 /* General colors */

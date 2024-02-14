@@ -149,8 +149,6 @@ static inline QString getName(const QColor &col)
 
 Style::Style(bool useDark) : QCommonStyle()
 {
-  isDark = useDark;
-
   opacityTimer_ = opacityTimerOut_ = nullptr;
   animationOpacity_ = animationOpacityOut_ = 100;
   animationStartState_ = animationStartStateOut_ = "normal";
@@ -216,6 +214,10 @@ Style::Style(bool useDark) : QCommonStyle()
 
   setBuiltinDefaultTheme();
   setTheme(theme, useDark);
+  QString themeCopy = theme;
+  if (themeCopy.endsWith(QLatin1String("#")))
+    themeCopy.chop(1);
+  isDark = useDark || theme.endsWith("Dark");
 
   tspec_ = settings_->getThemeSpec();
   hspec_ = settings_->getHacksSpec();
@@ -375,7 +377,7 @@ Style::Style(bool useDark) : QCommonStyle()
     blurHelper_ = new BlurHelper(this, menuShadow_, tooltipShadow_,
                                  tspec_.menu_blur_radius, tspec_.tooltip_blur_radius,
                                  tspec_.contrast, tspec_.intensity, tspec_.saturation,
-                                 hspec_.blur_only_active_window, isDark);
+                                 hspec_.blur_only_active_window, isDark, tspec_.blur_type);
   }
 
   cachedOption_ = nullptr;

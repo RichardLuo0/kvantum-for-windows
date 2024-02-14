@@ -12,3 +12,20 @@ TEMPLATE = subdirs
 
 CONFIG += qt \
           warn_on
+
+unix {
+  isEmpty(PREFIX) {
+    PREFIX = /usr
+  }
+}
+
+win32 {
+  isEmpty(PREFIX) {
+    PREFIX = "C:/Kvantum"
+  }
+}
+
+others.files = ../README.md COPYING
+others.path = $$PREFIX
+
+INSTALLS += others

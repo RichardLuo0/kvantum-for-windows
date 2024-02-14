@@ -1041,6 +1041,10 @@ theme_spec ThemeConfig::getThemeSpec()
   if (v.isValid())
     r.tooltip_blur_radius = qMin(v.toInt(),10);
 
+  v = getValue(KSL("General"),KSL("blur_type"));
+  if (v.isValid())
+    r.blur_type = v.toString();
+
   return r;
 }
 

@@ -41,7 +41,7 @@ class BlurHelper : public QObject {
              qreal contrast = static_cast<qreal>(1),
              qreal intensity = static_cast<qreal>(1),
              qreal saturation = static_cast<qreal>(1),
-             bool onlyActiveWindow = false, bool darkMode = false);
+             bool onlyActiveWindow = false, bool darkMode = false, QString blurType = "acrylic");
 
   virtual ~BlurHelper() {}
 
@@ -52,6 +52,8 @@ class BlurHelper : public QObject {
   int darkMode = false;
   int menuCorner;
   int tooltipsCorner;
+
+  int blurType;
 
   bool eventFilter(QObject *watched, QEvent *event);
   void applyBackdrop(QWidget *widget);
