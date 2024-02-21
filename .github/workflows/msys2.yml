@@ -19,7 +19,7 @@ jobs:
           mkdir build
           cd build
           qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES -spec win32-g++
-          make install
+          mingw32-make install
       - uses: actions/upload-artifact@v4
         with:
           name: qtct-msys2
