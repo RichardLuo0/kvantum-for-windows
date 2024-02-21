@@ -13,12 +13,13 @@ jobs:
         with:
           msystem: UCRT64
           update: true
-          install: git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-qt5-base mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-make
+          install: git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-qt5-base mingw-w64-ucrt-x86_64-make
       - name: build
         run: |
-          cd Kvantum
-          qmake WITHOUT_KF=YES
-          qmake install
+          mkdir build
+          cd build
+          qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES -spec win32-g++
+          make install
       - uses: actions/upload-artifact@v4
         with:
           name: qtct-msys2
