@@ -16,28 +16,13 @@
  */
 
 #include "blurhelper.h"
+
+#include <QMenu>
+
 #undef DATADIR
 #include <Windows.h>
 #include <dwmapi.h>
 #pragma comment(lib, "Dwmapi.lib")
-
-#include <QDebug>
-#include <QEvent>
-#include <QFrame>
-#include <QMenu>
-#include <QWindow>
-#include <QtMath>
-
-#ifdef NO_KF
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-#include <QVector>
-#endif
-#include <QApplication>
-#else
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-#include <KWindowEffects>
-#endif
-#endif
 
 DWM_WINDOW_CORNER_PREFERENCE getWindowsCorner(int radius) {
   switch (radius) {

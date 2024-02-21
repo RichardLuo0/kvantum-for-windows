@@ -69,6 +69,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 
 RESOURCES += themeconfig/defaulttheme.qrc
 
+win32: LIBS += -ldwmapi
+
 unix:!macx: LIBS += -lX11
 
 unix {
