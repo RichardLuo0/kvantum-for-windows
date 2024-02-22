@@ -22,8 +22,8 @@ jobs:
           cd build
           qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
           mingw32-make install
-          cd C:/Kvantum
-          windeployqt --no-translations --no-system-d3d-compiler --no-opengl-sw .
+          cd C:/Kvantum/styles
+          windeployqt --no-translations --no-system-d3d-compiler --no-opengl-sw --no-angle kvantum-qt5.dll
       - uses: actions/upload-artifact@v4
         with:
           name: kvantum-ucrt64
@@ -49,8 +49,8 @@ jobs:
           cd build
           qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
           mingw32-make install
-          cd C:/Kvantum
-          windeployqt --no-translations --no-system-d3d-compiler --no-opengl-sw .
+          cd C:/Kvantum/styles
+          windeployqt --no-translations --no-system-d3d-compiler --no-opengl-sw --no-angle kvantum-qt5.dll
       - uses: actions/upload-artifact@v4
         with:
           name: kvantum-mingw64
