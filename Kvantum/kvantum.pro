@@ -2,9 +2,11 @@ SUBDIRS += style style-hack
 
 greaterThan(QT_MAJOR_VERSION, 4) {
   lessThan(QT_MAJOR_VERSION, 6) {
-    SUBDIRS += kvantumpreview \
-               kvantummanager \
-               themes
+    isEmpty(WITHOUT_MANAGER) {
+      SUBDIRS += kvantumpreview \
+                kvantummanager \
+                themes
+    }
   }
 }
 

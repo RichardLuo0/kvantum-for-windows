@@ -20,9 +20,34 @@ jobs:
         run: |
           mkdir build
           cd build
-          qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES -spec win32-g++
+          qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
           mingw32-make install
       - uses: actions/upload-artifact@v4
         with:
-          name: qtct-msys2
+          name: qtct-ucrt64
+          path: C:/Kvantum
+
+  msys2-mingw64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: |
+            git mingw-w64-x86_64-gcc mingw-w64-x86_64-make
+            mingw-w64-x86_64-qt5-base mingw-w64-x86_64-qt5-svg
+      - name: build
+        run: |
+          mkdir build
+          cd build
+          qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
+          mingw32-make install
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qtct-mingw64
           path: C:/Kvantum
