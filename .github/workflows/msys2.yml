@@ -15,9 +15,14 @@ jobs:
           update: true
           install: |
             git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-make
-            mingw-w64-ucrt-x86_64-qt5-base mingw-w64-ucrt-x86_64-qt5-svg mingw-w64-ucrt-x86_64-qt5-tools
       - name: build
         run: |
+          wget https://repo.msys2.org/mingw/ucrt64/mingw-w64-ucrt-x86_64-qt5-base-5.15.3%2Bkde%2Br174-3-any.pkg.tar.zst --show-progress -O qt5-base.tar
+          pacman -U --noconfirm qt5-base.tar
+          wget https://repo.msys2.org/mingw/mingw64/mingw-w64-ucrt-x86_64-qt5-svg-5.15.3%2Bkde%2Br12-1-any.pkg.tar.zst --show-progress -O qt5-svg.tar
+          pacman -U --noconfirm qt5-svg.tar
+          wget https://repo.msys2.org/mingw/mingw64/mingw-w64-ucrt-x86_64-qt5-tools-5.15.3%2Bkde%2Br1-3-any.pkg.tar.zst --show-progress -O qt5-tools.tar
+          pacman -U --noconfirm qt5-tools.tar
           mkdir build
           cd build
           qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
@@ -42,9 +47,14 @@ jobs:
           update: true
           install: |
             git mingw-w64-x86_64-gcc mingw-w64-x86_64-make
-            mingw-w64-x86_64-qt5-base mingw-w64-x86_64-qt5-svg mingw-w64-x86_64-qt5-tools
       - name: build
         run: |
+          wget https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-qt5-base-5.15.3%2Bkde%2Br174-3-any.pkg.tar.zst --show-progress -O qt5-base.tar
+          pacman -U --noconfirm qt5-base.tar
+          wget https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-qt5-svg-5.15.3%2Bkde%2Br12-1-any.pkg.tar.zst --show-progress -O qt5-svg.tar
+          pacman -U --noconfirm qt5-svg.tar
+          wget https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-qt5-tools-5.15.3%2Bkde%2Br1-3-any.pkg.tar.zst --show-progress -O qt5-tools.tar
+          pacman -U --noconfirm qt5-tools.tar
           mkdir build
           cd build
           qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
