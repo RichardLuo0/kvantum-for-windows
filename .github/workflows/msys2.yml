@@ -8,23 +8,25 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
           update: true
           install: |
             git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-make
-            mingw-w64-ucrt-x86_64-qt5-base mingw-w64-ucrt-x86_64-qt5-svg
+            mingw-w64-ucrt-x86_64-qt5-base mingw-w64-ucrt-x86_64-qt5-svg mingw-w64-ucrt-x86_64-qt5-tools
       - name: build
         run: |
           mkdir build
           cd build
           qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
           mingw32-make install
+          cd C:/Kvantum
+          windeployqt --no-translations --no-system-d3d-compiler --no-opengl-sw .
       - uses: actions/upload-artifact@v4
         with:
-          name: qtct-ucrt64
+          name: kvantum-ucrt64
           path: C:/Kvantum
 
   msys2-mingw64:
@@ -33,21 +35,23 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
           update: true
           install: |
             git mingw-w64-x86_64-gcc mingw-w64-x86_64-make
-            mingw-w64-x86_64-qt5-base mingw-w64-x86_64-qt5-svg
+            mingw-w64-x86_64-qt5-base mingw-w64-x86_64-qt5-svg mingw-w64-x86_64-qt5-tools
       - name: build
         run: |
           mkdir build
           cd build
           qmake ../Kvantum/kvantum.pro WITHOUT_KF=YES WITHOUT_MANAGER=YES -spec win32-g++
           mingw32-make install
+          cd C:/Kvantum
+          windeployqt --no-translations --no-system-d3d-compiler --no-opengl-sw .
       - uses: actions/upload-artifact@v4
         with:
-          name: qtct-mingw64
+          name: kvantum-mingw64
           path: C:/Kvantum
