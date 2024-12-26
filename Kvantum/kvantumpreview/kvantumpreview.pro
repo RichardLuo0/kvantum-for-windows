@@ -45,7 +45,7 @@ unix|win32 {
   BINDIR = $$PREFIX
   DATADIR =$$PREFIX/share
 
-  DEFINES += DATADIR="qgetenv(\\\"KVANTUM_DATA\\\")"
+  DEFINES += DATADIR=qgetenv(\\\"KVANTUM_DATA\\\")
 
   trans.path = $$DATADIR/kvantumpreview
   trans.files += ./data/translations/translations
