@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Pedram Pourang (aka Tsu Jan) 2014-2019 <tsujan2000@gmail.com>
+ * Copyright (C) Pedram Pourang (aka Tsu Jan) 2014-2024 <tsujan2000@gmail.com>
  *
  * Kvantum is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,7 +18,10 @@
 #ifndef THEMECONFIG_H
 #define THEMECONFIG_H
 
-#include "themeconfig/specs.h"
+#include "specs.h"
+
+#define KSL(x) QStringLiteral(x)
+#define KL1(x) QLatin1StringView(x)
 
 class QSettings;
 

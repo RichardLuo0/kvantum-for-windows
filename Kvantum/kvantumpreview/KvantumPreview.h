@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Pedram Pourang (aka Tsu Jan) 2014-2023 <tsujan2000@gmail.com>
+ * Copyright (C) Pedram Pourang (aka Tsu Jan) 2014-2024 <tsujan2000@gmail.com>
  *
  * Kvantum is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -48,7 +48,11 @@ public:
     connect (checkBoxDocMode, &QAbstractButton::toggled, this, &KvantumPreview::docMode);
     connect (checkBoxFlat, &QAbstractButton::toggled, this, &KvantumPreview::makeFlat);
     connect (checkBoxRaise, &QAbstractButton::toggled, this, &KvantumPreview::makeAutoRaise);
+#if (QT_VERSION >= QT_VERSION_CHECK(6,7,0))
+    connect (checkBox_7, &QCheckBox::checkStateChanged, this, &KvantumPreview::setDisabledState);
+#else
     connect (checkBox_7, &QCheckBox::stateChanged, this, &KvantumPreview::setDisabledState);
+#endif
     QActionGroup *aGroup = new QActionGroup (this);
     actionMenu_radio->setActionGroup (aGroup);
     actionMenu_radio1->setActionGroup (aGroup);
@@ -60,11 +64,7 @@ public:
     auto cur = QDateTime::currentDateTime();
     dateTimeEdit->setDateTime (cur);
     dateTimeEdit_2->setDateTime (cur);
-#if (QT_VERSION >= QT_VERSION_CHECK(6,2,0))
     auto l = QLocale(locale().language(), locale().territory());
-#else
-    auto l = QLocale(locale().language(), locale().country());
-#endif
     dateTimeEdit->setLocale (l);
     dateTimeEdit_2->setLocale (l);
 

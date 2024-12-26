@@ -1,7 +1,7 @@
 // Adapted from Qt -> "qcommonstyle.cpp" to control how view-items are drawn.
 
 /*
- * Copyright (C) Pedram Pourang (aka Tsu Jan) 2021 <tsujan2000@gmail.com>
+ * Copyright (C) Pedram Pourang (aka Tsu Jan) 2021-2024 <tsujan2000@gmail.com>
  *
  * Kvantum is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -79,7 +79,7 @@ QSize Style::viewItemSize(const QStyleOptionViewItem *option, int role) const
       textLayout.setTextOption(textOption);
       const bool wrapText = option->features & QStyleOptionViewItem::WrapText;
       const int frameHMargin = pixelMetric(QStyle::PM_FocusFrameHMargin, option, widget) + 1;
-      const int textIconSpacing = getLabelSpec(QStringLiteral("ItemView")).tispace;
+      const int textIconSpacing = getLabelSpec(KSL("ItemView")).tispace;
       QRect bounds = option->rect;
       switch (option->decorationPosition) {
         case QStyleOptionViewItem::Left:
@@ -146,7 +146,7 @@ void Style::viewItemLayout(const QStyleOptionViewItem *opt,  QRect *checkRect,
   const int y = opt->rect.top();
   int w = 0, h = 0;
 
-  const int textIconSpacing = getLabelSpec(QStringLiteral("ItemView")).tispace;
+  const int textIconSpacing = getLabelSpec(KSL("ItemView")).tispace;
 
   /* if there is no text, we still want a decent height
      for the size hint and the editor */
@@ -592,11 +592,15 @@ void Style::viewItemLayout(const QStyleOptionViewItem *opt,  QRect *checkRect,
                                      checkRect->size(), check);
     *pixmapRect = QStyle::alignedRect(opt->direction, opt->decorationAlignment,
                                       pixmapRect->size(), decoration);
+#if (QT_VERSION >= QT_VERSION_CHECK(6,7,0))
+    *textRect = display; // WARNING: There is a backward incompatible change in Qt 6.7.
+#else
     if (opt->showDecorationSelected)
       *textRect = display; // the text takes all available space
     else
       *textRect = QStyle::alignedRect(opt->direction, opt->displayAlignment,
                                       textRect->size().boundedTo(display.size()), display);
+#endif
   }
   else
   { // for getting the sizes

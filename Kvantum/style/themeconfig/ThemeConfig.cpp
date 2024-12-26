@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Pedram Pourang (aka Tsu Jan) 2014-2022 <tsujan2000@gmail.com>
+ * Copyright (C) Pedram Pourang (aka Tsu Jan) 2014-2024 <tsujan2000@gmail.com>
  *
  * Kvantum is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,14 +21,9 @@
 #include "ThemeConfig.h"
 
 #if defined Q_WS_X11 || defined Q_OS_LINUX || defined Q_OS_FREEBSD || defined Q_OS_OPENBSD || defined Q_OS_NETBSD || defined Q_OS_HURD
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-#include <QX11Info>
-#endif
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #endif
-
-#define KSL(x) QStringLiteral(x)
 
 namespace Kvantum {
 
@@ -206,7 +201,7 @@ frame_spec ThemeConfig::getFrameSpec(const QString &elementName)
         if (v.isValid())
         {
           QString value = v.toString();
-          if (value.endsWith(QLatin1String("font")))
+          if (value.endsWith(KL1("font")))
           { // multiply by the app font height
             r.expansion = qMax(value.left(value.length()-4).toFloat(), 0.0f)
                           * QFontMetrics(QApplication::font()).boundingRect(QLatin1Char('M')).height()*1.6;
@@ -549,9 +544,9 @@ size_spec ThemeConfig::getSizeSpec(const QString& elementName)
   if (v.isValid())
   {
     QString value = v.toString();
-    if (value.startsWith(QLatin1String("+")))
+    if (value.startsWith(KL1("+")))
       r.incrementH = true;
-    if (value.endsWith(QLatin1String("font")))
+    if (value.endsWith(KL1("font")))
     { // multiply by the app font height
       r.minH = qMax(value.left(value.length()-4).toFloat(), 0.0f)
                * QFontMetrics(QApplication::font()).boundingRect(QLatin1Char('M')).height()*1.6;
@@ -565,9 +560,9 @@ size_spec ThemeConfig::getSizeSpec(const QString& elementName)
   if (v.isValid())
   {
     QString value = v.toString();
-    if (value.startsWith(QLatin1String("+")))
+    if (value.startsWith(KL1("+")))
       r.incrementW = true;
-    if (value.endsWith(QLatin1String("font")))
+    if (value.endsWith(KL1("font")))
     { // multiply by the app font height
       r.minW = qMax(value.left(value.length()-4).toFloat(), 0.0f)
                * QFontMetrics(QApplication::font()).boundingRect(QLatin1Char('M')).height()*1.6;
@@ -587,18 +582,12 @@ theme_spec ThemeConfig::getCompositeSpec()
 #if defined Q_WS_X11 || defined Q_OS_LINUX || defined Q_OS_FREEBSD || defined Q_OS_OPENBSD || defined Q_OS_NETBSD || defined Q_OS_HURD
   if (isX11_)
   {
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-    Atom atom = XInternAtom(QX11Info::display(), "_NET_WM_CM_S0", False);
-    if (XGetSelectionOwner(QX11Info::display(), atom))
-      compositing = true;
-#else
     if (auto x11NativeInterfce = qApp->nativeInterface<QNativeInterface::QX11Application>())
     {
       Atom atom = XInternAtom(x11NativeInterfce->display(), "_NET_WM_CM_S0", False);
       if (XGetSelectionOwner(x11NativeInterfce->display(), atom))
         compositing = true;
     }
-#endif
   }
   else if (QString::compare(QGuiApplication::platformName(), "wayland", Qt::CaseInsensitive) == 0)
   {
@@ -777,7 +766,7 @@ theme_spec ThemeConfig::getThemeSpec()
   if (v.isValid()) // 0 by default
   {
     QString value = v.toString();
-    if (value.endsWith(QLatin1String("font")))
+    if (value.endsWith(KL1("font")))
     { // multiply by the app font height
       r.active_tab_overlap = qMax(value.left(value.length()-4).toFloat(), 0.0f)
                              * QFontMetrics(QApplication::font()).boundingRect(QLatin1Char('M')).height()*1.6;
@@ -798,7 +787,7 @@ theme_spec ThemeConfig::getThemeSpec()
   {
     int max = QFontMetrics(QApplication::font()).boundingRect(QLatin1Char('M')).height()*1.6;
     QString value = v.toString();
-    if (value.endsWith(QLatin1String("font")))
+    if (value.endsWith(KL1("font")))
     { // multiply by the app font height
       r.tab_button_extra_margin = qMin(qMax(value.left(value.length()-4).toFloat(), 0.0f),1.0f)
                                   * max;
@@ -851,7 +840,7 @@ theme_spec ThemeConfig::getThemeSpec()
   if (v.isValid()) // 0 by default
   {
     QString value = v.toString();
-    if (value.endsWith(QLatin1String("font")))
+    if (value.endsWith(KL1("font")))
     { // multiply by the app font height
       r.progressbar_thickness = qMax(value.left(value.length()-4).toFloat(), 0.0f)
                                 * QFontMetrics(QApplication::font()).boundingRect(QLatin1Char('M')).height()*1.6;

@@ -1,11 +1,43 @@
-V1.0.11
+V1.1.4
 ---------
+ * Exclude the opaque list from blurring of hard-coded translucency.
+ * Use a translucent background in "PE_Widget" if needed and existing.
+ * Disable and re-enable blurring if `windowOpacity` switches between 0 and 1 respectively.
+ * Corrected a minor, old mistake in calculating the text size of a default push-button.
+ * Added a workaround for a weird bug in Qt 6.8 that creates gaps between SVG menu elements when the scale factor is more than 1 and the painter opacity is less than 1.
+
+V1.1.3
+---------
+ * Draw dragged tabs of Qt ≥ 6.6 as single tabs (like they were drawn with Qt < 6.6).
+ * Workaround for the translucency bug of Qt 6.8, which may create artifacts in translucent windows/popups under Wayland.
+ * Cleaned up the code and removed some old codes about GTK DEs.
+ * Bumped the minimum required version of Qt6 to 6.6.
+ * Separated the source files of Qt5 from those of Qt6.
+ * Said goodbye to KF5. Since the current version, the Qt5 plugin is compiled without it.
+ * Replaced `QLatin1String` with `QLatin1StringView`.
+
+V1.1.2
+---------
+ * Workaround for an inconsistency in Qt, where a persistent editor can be opened for an item view without setting the flag "ItemIsEditable".
+ * Follow Qt 6.7 by giving the available space to the text rectangle of a view item (this extends the workaround which was added to V1.1.1).
+
+V1.1.1
+---------
+ * The support for qmake is back without KWindowSystem and without being advertised.
+ * Added a workaround for a backward incompatible change in how Qt 6.7 draws item views.
+ * Fixed an old issue in drawing radio buttons under mouse cursor without animation.
+
+V1.1.0
+---------
+ * Made the default compilation be against Qt6. (For Qt5, set "ENABLE_QT5" to "ON", as in `cmake .. -DENABLE_QT5=ON`.)
+ * Removed the support for qmake (because KF6 doesn't support it).
  * Made it possible to reduce only the opacity of inactive windows with negative values of the relevant setting (in Kvantum Manager).
  * Added a workaround for a bug in Qt 6.6, because of which, translucent menus on a non-primary screen might be drawn with their minimum sizes and without contents after being moved.
  * Ensure an opaque base color for combo popups on toolbars.
  * Use the standard palette when restoring the text colors on an unstyled toolbar.
  * Added a workaround for tiny overlaps between tree branch lines with translucent light/dark colors.
  * Added a toolbar, containing a date-time editor with popup and a progress-bar, below the top toolbars of kvantumpreview.
+ * Added a workaround for a crashing bug in KDE's plasma-settings.
 
 V1.0.10
 ---------

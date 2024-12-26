@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Pedram Pourang (aka Tsu Jan) 2018-2020 <tsujan2000@gmail.com>
+ * Copyright (C) Pedram Pourang (aka Tsu Jan) 2018-2024 <tsujan2000@gmail.com>
  *
  * Kvantum is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@
 int main (int argc, char *argv[])
 {
     const QString name = "Kvantum Manager";
-    const QString version = "1.0.11";
+    const QString version = "1.1.4";
 
     QStringList options;
     for (int i = 1; i < argc; ++i)
@@ -96,40 +96,24 @@ int main (int argc, char *argv[])
         }
     }
 
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-    a.setAttribute (Qt::AA_UseHighDpiPixmaps, true);
-#endif
-
     QStringList langs (QLocale::system().uiLanguages());
     QString lang; // bcp47Name() doesn't work under vbox
     if (!langs.isEmpty())
         lang = langs.first().replace ('-', '_');
 
     QTranslator qtTranslator;
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-    if (!qtTranslator.load ("qt_" + lang, QLibraryInfo::location (QLibraryInfo::TranslationsPath)))
-#else
     if (!qtTranslator.load ("qt_" + lang, QLibraryInfo::path (QLibraryInfo::TranslationsPath)))
-#endif
     { // shouldn't be needed
         if (!langs.isEmpty())
         {
             lang = langs.first().split (QLatin1Char ('_')).first();
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-            qtTranslator.load ("qt_" + lang, QLibraryInfo::location (QLibraryInfo::TranslationsPath));
-#else
             (void)qtTranslator.load ("qt_" + lang, QLibraryInfo::path (QLibraryInfo::TranslationsPath));
-#endif
         }
     }
     a.installTranslator (&qtTranslator);
 
     QTranslator KMTranslator;
-#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
-    KMTranslator.load("kvantummanager_" + lang, DATADIR + "/kvantummanager/translations");
-#else
-    (void) KMTranslator.load("kvantummanager_" + lang, DATADIR + "/kvantummanager/translations");
-#endif
+    (void)KMTranslator.load ("kvantummanager_" + lang, DATADIR + "/kvantummanager/translations");
     a.installTranslator (&KMTranslator);
 
     /* for Kvantum Manager to do its job, it should by styled by Kvantum */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Pedram Pourang (aka Tsu Jan) 2018-2022 <tsujan2000@gmail.com>
+ * Copyright (C) Pedram Pourang (aka Tsu Jan) 2018-2024 <tsujan2000@gmail.com>
  *
  * Kvantum is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -2899,7 +2899,7 @@ void KvantumManager::respectDE (bool checked)
     }
     else
     {
-        QSet<QByteArray> gtkDesktops = QSet<QByteArray>() << "gnome" << "unity" << "pantheon";
+        QSet<QByteArray> gtkDesktops = QSet<QByteArray>() << "gnome" << "pantheon";
         if (gtkDesktops.contains (desktop_))
         {
             //ui->labelX11Drag->setEnabled (!checked);
@@ -2907,20 +2907,20 @@ void KvantumManager::respectDE (bool checked)
             //ui->checkBoxBtnDrag->setEnabled (!checked);
             ui->checkBoxIconlessBtn->setEnabled (!checked);
             ui->checkBoxIconlessMenu->setEnabled (!checked);
-            ui->checkBoxNoComposite->setEnabled (!checked);
-            ui->checkBoxBlurPopup->setEnabled (!ui->checkBoxNoComposite->isChecked()
-                                               && !ui->checkBoxBlurWindow->isChecked()
-                                               && !checked);
-            ui->checkBoxShadowlessPopup->setEnabled (!ui->checkBoxNoComposite->isChecked());
-            ui->checkBoxTrans->setEnabled (!ui->checkBoxNoComposite->isChecked() && !checked);
+            //ui->checkBoxNoComposite->setEnabled (!checked);
+            //ui->checkBoxShadowlessPopup->setEnabled (!ui->checkBoxNoComposite->isChecked());
+            //ui->checkBoxTrans->setEnabled (!ui->checkBoxNoComposite->isChecked() && !checked);
             bool enableTrans (!ui->checkBoxNoComposite->isChecked()
                               && ui->checkBoxTrans->isChecked()
                               && !checked);
-            ui->opaqueLabel->setEnabled (enableTrans);
+            /*ui->opaqueLabel->setEnabled (enableTrans);
             ui->opaqueEdit->setEnabled (enableTrans);
             ui->reduceOpacityLabel->setEnabled (enableTrans);
-            ui->spinReduceOpacity->setEnabled (enableTrans);
+            ui->spinReduceOpacity->setEnabled (enableTrans);*/
             ui->checkBoxBlurWindow->setEnabled (enableTrans);
+            ui->checkBoxBlurPopup->setEnabled (!ui->checkBoxNoComposite->isChecked()
+                                               && !ui->checkBoxBlurWindow->isChecked()
+                                               && !checked);
         }
         else ui->checkBoxDE->setEnabled (false);
     }
