@@ -51,6 +51,8 @@ KvantumManager::KvantumManager (const QString& lang, QWidget *parent) : QMainWin
     modifiedSuffix_ = " (" + tr ("modified") + ")";
     kvDefault_ = "Kvantum (" + tr ("default") + ")";
 
+    ui->blurTypeComboBox->addItem("Default", "default");
+    ui->blurTypeComboBox->addItem("None", "none");
     ui->blurTypeComboBox->addItem("Mica", "mica");
     ui->blurTypeComboBox->addItem("Mica Alt", "mica_alt");
     ui->blurTypeComboBox->addItem("Acrylic", "acrylic");
