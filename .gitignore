@@ -2,3 +2,4 @@ build-*
 *.pro.user
 *.bat
 deploy-*
+Kvantum/build/**
