@@ -103,6 +103,8 @@ bool BlurHelper::eventFilter(QObject *watched, QEvent *event) {
 }
 
 void BlurHelper::applyBackdrop(QWidget *widget) {
+  if (blurType == -1) return;
+
   HWND hwnd = (HWND)widget->winId();
 
   DwmExtendFrameIntoClientArea(hwnd, &margins);
